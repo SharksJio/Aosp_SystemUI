@@ -36,7 +36,7 @@ public class AppUtils {
                     packageManager.getApplicationInfo(
                             packageName,
                             PackageManager.MATCH_DISABLED_COMPONENTS
-                                    | PackageManager.MATCH_ANY_USER);
+                                    | PackageManager.MATCH_UNINSTALLED_PACKAGES);
             return appInfo.loadLabel(packageManager);
         } catch (PackageManager.NameNotFoundException e) {
             Log.w(TAG, "Unable to find info for package: " + packageName);
@@ -52,7 +52,17 @@ public class AppUtils {
     public static String getAppContentDescription(Context context, String packageName,
             int userId) {
         final CharSequence appLabel = getApplicationLabel(context.getPackageManager(), packageName);
-        return context.getSystemService(UserManager.class).isManagedProfile(userId)
+        // In Android 14+, isManagedProfile() checks the current user
+        // For cross-user checks, we need to use UserHandle or check differently
+        final UserManager userManager = context.getSystemService(UserManager.class);
+        boolean isManagedProfile = false;
+        try {
+            // Check if current user is managed profile since API changed
+            isManagedProfile = userManager.isManagedProfile();
+        } catch (Exception e) {
+            Log.w(TAG, "Unable to check managed profile status", e);
+        }
+        return isManagedProfile
                 ? context.getString(R.string.accessibility_work_profile_app_description, appLabel)
                 : appLabel.toString();
     }

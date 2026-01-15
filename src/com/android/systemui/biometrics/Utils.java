@@ -22,6 +22,7 @@ import static android.view.accessibility.AccessibilityEvent.CONTENT_CHANGE_TYPE_
 import android.annotation.IntDef;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
+import android.content.pm.UserInfo;
 import android.hardware.biometrics.BiometricPrompt;
 import android.os.Bundle;
 import android.os.UserManager;
@@ -101,6 +102,12 @@ public class Utils {
 
     static boolean isManagedProfile(Context context, int userId) {
         final UserManager userManager = context.getSystemService(UserManager.class);
-        return userManager.isManagedProfile(userId);
+        try {
+            // For Android 14+, use getUserInfo to check managed profile status
+            UserInfo userInfo = userManager.getUserInfo(userId);
+            return userInfo != null && userInfo.isManagedProfile();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.UserInfo;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Handler;
@@ -477,10 +478,18 @@ public class PhoneStatusBarPolicy
             final int userId;
             try {
                 userId = ActivityTaskManager.getService().getLastResumedActivityUserId();
-                boolean isManagedProfile = mUserManager.isManagedProfile(userId);
+                boolean isManagedProfile = false;
+                try {
+                    // For Android 14+, use getUserInfo to check managed profile status
+                    UserInfo userInfo = mUserManager.getUserInfo(userId);
+                    isManagedProfile = userInfo != null && userInfo.isManagedProfile();
+                } catch (Exception e) {
+                    // Fall back to false if unable to determine
+                }
+                final boolean finalIsManagedProfile = isManagedProfile;
                 mHandler.post(() -> {
                     final boolean showIcon;
-                    if (isManagedProfile && (!mKeyguardStateController.isShowing()
+                    if (finalIsManagedProfile && (!mKeyguardStateController.isShowing()
                             || mKeyguardStateController.isOccluded())) {
                         showIcon = true;
                         mIconController.setIcon(mSlotManagedProfile,

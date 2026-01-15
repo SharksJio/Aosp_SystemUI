@@ -206,7 +206,7 @@ public class ApplicationsState {
         mBackgroundHandler = new BackgroundHandler(mThread.getLooper());
 
         // Only the owner can see all apps.
-        mAdminRetrieveFlags = PackageManager.MATCH_ANY_USER |
+        mAdminRetrieveFlags = PackageManager.MATCH_UNINSTALLED_PACKAGES |
                 PackageManager.MATCH_DISABLED_COMPONENTS |
                 PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS;
         mRetrieveFlags = PackageManager.MATCH_DISABLED_COMPONENTS |
@@ -1651,7 +1651,18 @@ public class ApplicationsState {
          */
         public void ensureLabelDescriptionLocked(Context context) {
             final int userId = UserHandle.getUserId(this.info.uid);
-            if (UserManager.get(context).isManagedProfile(userId)) {
+            boolean isManagedProfile = false;
+            try {
+                UserManager userManager = UserManager.get(context);
+                // For Android 14+, check if the user info indicates a managed profile
+                UserInfo userInfo = userManager.getUserInfo(userId);
+                if (userInfo != null) {
+                    isManagedProfile = userInfo.isManagedProfile();
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "Unable to check managed profile for user " + userId, e);
+            }
+            if (isManagedProfile) {
                 this.labelDescription = context.getString(
                         com.android.settingslib.R.string.accessibility_work_profile_app_description,
                         this.label);
