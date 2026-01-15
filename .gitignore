@@ -23,12 +23,14 @@ misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
-# Keystore files
+# Keystore files - keep platform.keystore for this project
 *.jks
-*.keystore
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
 # Android Profiling
 *.hprof
+
+# Temporary files
+/tmp/
