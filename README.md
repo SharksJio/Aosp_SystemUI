@@ -24,10 +24,11 @@ This project contains the Android System UI from AOSP (Android Open Source Proje
 
 ## Prerequisites
 
-- Android Studio Arctic Fox (2020.3.1) or later (recommended: Android Studio Flamingo or later)
-- JDK 11 or later (JDK 17 recommended)
-- Android SDK with API level 30 (Android 11) or later
-- Build Tools version 30.0.3
+- **Android Studio Narwhal (2025.1.2) or later** recommended
+  - Also compatible with Android Studio Iguana (2023.2.1) or later
+- **JDK 17 or later** (JDK 21 recommended for latest Android Studio versions)
+- **Android SDK with API level 34** (Android 14) or later
+- **Build Tools version 34.0.0**
 - Internet connection for downloading Gradle dependencies
 
 ## Setup Instructions
@@ -77,9 +78,13 @@ The project uses the following key configurations:
 
 - **Application ID:** `com.android.systemui`
 - **Min SDK:** 29 (Android 10)
-- **Target SDK:** 30 (Android 11)
-- **Compile SDK:** 30 (Android 11)
-- **Build Tools:** 30.0.3
+- **Target SDK:** 34 (Android 14)
+- **Compile SDK:** 34 (Android 14)
+- **Build Tools:** 34.0.0
+- **Gradle:** 8.7
+- **Android Gradle Plugin:** 8.5.2
+- **Kotlin:** 1.9.24
+- **Java:** 11 (source/target compatibility)
 
 ## Dependencies
 
