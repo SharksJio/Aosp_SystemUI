@@ -1,0 +1,45 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdkVersion COMPILE_SDK
+    namespace 'com.android.settingslib.utils'
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    buildFeatures {
+        buildConfig = false
+    }
+
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+    }
+}
